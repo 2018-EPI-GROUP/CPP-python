@@ -1,0 +1,62 @@
+两数相加
+1、暴力解决
+代码如下：
+
+class Solution(object):
+    def twoSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        n = len(nums)
+        for x in range (n):
+            for y in range (x+1,n):
+                if nums[x]+nums[y]==target:
+                    return x,y
+                    break
+                else :
+                    continue
+    
+时间复杂度为O（n^2)
+这种解题思路易于理解，但是时间复杂度高
+
+
+2、只循环一次
+class Solution(object):
+    def twoSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        n = len(nums)
+        for x in range(n):
+            a=target-nums[x]
+            if a in nums:
+                y=nums.index(a)
+                if y!=x:
+                    return x,y
+                else:
+                    continue
+
+这种算法缩短程序运行时间。在此程序中使用if语句次数较少，但如果，if条件执行次数太多，也会影响程序运行的效率
+
+3、借助一个空字典
+class Solution(object):
+    def twoSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        n = len(nums)
+        d={}
+        for x in range(n):
+            a=target-nums[x]
+            if nums[x] in d:
+                return d[nums[x]],x
+            else:
+                d[a]=x
+    
+这种操作循环次数降低，但是因为建立一个空字典是的需要的空间增大，及内存变大，这种算法是借用字典的key和value，最初，字典为空，当遇到第一个数后，会在字典中第一次加入键值对，然后，直至发现nums[x]在字典中，即，此时x值为第二的数所在的位置，d[nums[x]]则是第一个数所在的位置
