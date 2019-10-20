@@ -1,0 +1,89 @@
+/*对顺序表进行操作，实现顺序表的插入、求表长以及输出*/
+#include<stdio.h>
+#define MAXSIZE 100
+typedef int ElemType;
+/*定义线性表*/
+typedef struct
+{
+	ElemType list[MAXSIZE];
+	int last;
+}SeqList;
+/*创建空表*/
+void InitList(SeqList *L)
+{
+	L->last=-1;
+}
+/*输入递增有序顺序表*/
+viod Putseqlist(SeqList *L,int n)
+{
+	int i;
+	for(i=0;i<n;i++)
+		scanf("%d",&(L=>list[i]));
+	L->last=L->last+n;
+}
+/*求表长*/
+int LengthList(SeqList *L)
+{
+	int Len;
+	Len=L->last+1;
+	return Len;
+}
+/*判断插入位置*/
+int PositionList(SeqList *L,int X)
+{
+	int j;
+	for(j=0;j<=L->last;j++)
+	{
+		if(X<L->list[j])
+			return j+1;
+	}
+		return(L->last+2);
+}
+/*插入元素*/
+int InsertList(SeqList *L,int i,int e)
+{
+	int k;
+	if((i<1)||(I>L->last+2))
+	{
+		printf("插入位置不合理");
+		return 0;
+	}
+	if(L->last>=MAXSIZE-1)
+	{
+		printf("表端已满无法插入");
+		return 0;
+	}
+	for (k=L->last;k>=i-1;k--)
+	{
+		L->list[k+1]=L->list[k];
+		L->list[i-1]=e;
+		L->last++;
+		return (1);
+	}
+}
+/*输出元素*/
+int OutputSeqList(SeqList *L)
+{
+	int i;
+	printf("输出结果为：\n");
+	for(i=0;i<=L->last;i++)
+		printf("%d",L->list[i]);
+	return (L->list[i]);
+}
+void main()
+{
+	int s,c;
+	SeqList L;
+	InitList(&L);
+	printf("请输入顺序表长度：\n");
+	scanf("%d",&s);
+	printf("请输入递增顺序表：\n");
+	PutseqList(&L,s);
+	LengthList(&L);
+	printf("表长为%d\n",LengthList(&L));
+	printf(请输入要插入的元素:\n);
+	scanf("%d",&c);
+	InsertList(&L,PositionList(&L,c),c);
+	OutputSeqList(&L);
+	printf("\n")；
+}
