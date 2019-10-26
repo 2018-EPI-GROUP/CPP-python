@@ -20,3 +20,6 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize){
     }
     return 0;
 }
+这题最后一个参数我不知道他是啥意思，题目对参数也啥都没说，一开始我以为returnSize是需要返回的数组的指针，弄了一晚上都一直错；
+最后发现他要你强行定义他是2，他依靠这个检测你输出的正确。。。。
+用了个最笨的方法遍历，时间复杂度O(n**2)，总算是过咯；
