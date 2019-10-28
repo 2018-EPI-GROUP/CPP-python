@@ -1,0 +1,81 @@
+1、冒泡排序
+
+最简单的一种排序算法。假设长度为n的数组arr，要按照从小到大排序。则冒泡排序的具体过程可以描述为：首先从数组的第一个元素开始到数组最后一个元素为止，对数组中相邻的两个元素进行比较，如果位于数组左端的元素大于数组右端的元素，则交换这两个元素在数组中的位置，此时数组最右端的元素即为该数组中所有元素的最大值。接着对该数组剩下的n-1个元素进行冒泡排序，直到整个数组有序排列。算法的时间复杂度为O(n^2)。
+void BubbleSort(int arr[], int length)
+{	
+	for (int i = 0; i < length; i++)
+	{		
+	 	for (int j = 0; j < length -  i - 1; j++)	
+		{	
+			if (arr[j] > arr[j + 1])			
+			{					
+			int temp;	
+			temp = arr[j + 1];
+			arr[j + 1] = arr[j];	
+			arr[j] = temp;
+			}
+		}
+	}
+}
+2、选择排序
+
+每一趟在n-i+1(i=1,2,...,n-1)个记录中选取关键字最小的记录作为有序序列中第i个记录。具体来说，假设长度为n的数组arr，要按照从小到大排序，那么先从n个数字中找到最小值min1，如果最小值min1的位置不在数组的最左端(也就是min1不等于arr[0])，则将最小值min1和arr[0]交换，接着在剩下的n-1个数字中找到最小值min2，如果最小值min2不等于arr[1]，则交换这两个数字，依次类推，直到数组arr有序排列。算法的时间复杂度为O(n^2)。
+void SelectionSort(int arr[], int length)
+{
+	for (int i = 0; i < length; i++)
+	{
+		int index = i;
+		for (int j = i+1; j < length; j++)
+		{
+			if (arr[j] < arr[index])
+			{
+				index = j;
+			}
+		}
+		if (index == i)
+			continue;	
+		else
+		{
+			int temp;
+			temp = arr[index];
+			arr[index] = arr[i];
+			arr[i] = temp;
+		}
+	}
+}
+ 5、快速排序
+
+快速排序的基本思想是：通过一趟排序将待排记录分割成独立的两部分，其中一部分记录的关键字均比另一部分记录的关键字小，则可分别对这两部分记录继续进行排序，已达到整个序列有序。一趟快速排序的具体过程可描述为：从待排序列中任意选取一个记录(通常选取第一个记录)作为基准值，然后将记录中关键字比它小的记录都安置在它的位置之前，将记录中关键字比它大的记录都安置在它的位置之后。这样，以该基准值为分界线，将待排序列分成的两个子序列。
+一趟快速排序的具体做法为：设置两个指针low和high分别指向待排序列的开始和结尾，记录下基准值baseval(待排序列的第一个记录)，然后先从high所指的位置向前搜索直到找到一个小于baseval的记录并互相交换，接着从low所指向的位置向后搜索直到找到一个大于baseval的记录并互相交换，重复这两个步骤直到low=high为止。
+void QuickSort(int arr[], int start, int end)
+{
+	if (start >= end)
+		return;
+	int i = start;
+	int j = end;
+	int baseval = arr[start];
+	while (i < j)
+	{
+		while (i < j && arr[j] >= baseval)
+		{
+			j--;
+		}
+		if (i < j)
+		{
+			arr[i] = arr[j];
+			i++;
+		}
+		while (i < j && arr[i] < baseval)
+		{
+			i++;
+		}
+		if (i < j)
+		{
+			arr[j] = arr[i];
+			j--;
+		}
+	}
+	arr[i] = baseval;
+	QuickSort(arr, start, i - 1);
+	QuickSort(arr, i + 1, end);
+}
