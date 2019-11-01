@@ -1,0 +1,66 @@
+实现 strStr() 函数。
+
+给定一个 haystack 字符串和一个 needle 字符串，在 haystack 字符串中找出 needle 字符串出现的第一个位置 (从0开始)。如果不存在，则返回  -1。
+
+示例 1:
+
+输入: haystack = "hello", needle = "ll"
+输出: 2
+
+
+示例 2:
+
+输入: haystack = "aaaaa", needle = "bba"
+输出: -1
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/implement-strstr
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+int strStr(char * haystack, char * needle){
+    int j=0,m;
+    if(needle[0]==NULL)
+        return 0;
+    for(int h=0;haystack[h]!='\0';h++)
+    {
+        if(haystack[h]==needle[0])
+        for(m=h,j=0;needle[j]!='\0';m++,j++)
+        {
+            if(haystack[m]!=needle[j])
+            break;   
+        }
+        if(j>m)
+        return -1;
+        if(needle[j]=='\0')
+        return h;
+    }
+    return -1;
+}
+了解了挺多处理字符串的函数，虽然没用上。
+strlen
+原型：int strlen ( const char *str )
+功能：返回字符串的实际长度，不含 '\0'。
+
+
+
+strcpy
+原型:char *strcpy( char *dest, const char *src )
+功能：把src所指向的以 '\0'结尾的字符串复制到dest所指向的数组中(strncpy，代表只拷贝前n个)
+返回值：返回参数dest字符串起始地址
+
+
+
+strncpy
+原型：char *strncpy(char *dest, const char *src, size_t n)
+功能：将参数src字符串拷贝前n个字符至参数dest所指的地址
+返回值：返回参数dest字符串起始地址
+
+strcmp
+原型： int strcmp( char *str1, char *str2 )
+功能：比较str1和str2的大小;
+返回值：相等返回0，str1大于str2返回1，str1小于str2返回-1
+
+
+strcat
+原型：char *strcat(char *dest, const char *src)
+功能：将参数src字符串拷贝到参数dest所指的字符串尾
+返回值：返回参数dest的字符串起始地址
