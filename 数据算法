@@ -1,0 +1,145 @@
+学生信息管理
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h> 
+#define N 10
+typedef struct node
+{   int num;
+    int cla;
+	char name[30];
+	struct node *next;
+}Node,*LinkList;
+int f=0; 
+//输入 
+LinkList createlist(int n)
+{ int i;
+  LinkList head,pre,p;
+  head=pre=(LinkList)malloc(sizeof(Node));
+  for(i=0;i<3;i++)
+  { p=(LinkList)malloc(sizeof(Node));
+    scanf("%s %d %d",p->name,&p->num,&p->cla);
+    pre->next=p;
+	pre=p;
+  }
+  pre->next=NULL;
+  return head;
+}
+
+//输出 链表所有信息 
+void output(LinkList head)
+{int i;
+	LinkList p,pre;
+	pre=p=head->next;
+ while(p!=NULL)
+{
+ 
+for(i=0;i<3;i++)
+   {
+   printf("%s\t%d\t%d\t",p->name,p->num,p->cla);
+    pre=pre->next;
+    p=pre;
+   }
+ }
+printf("\n");
+}
+
+// 根据名字查找 ，返回学号和班级 
+int search(LinkList head)
+{LinkList p;
+  int k=0;
+  char m[30];
+  scanf("%s",m);
+ p=head->next;
+ while(p!=NULL)
+ {
+	 if(!strcmp(p->name,m))
+		 { printf("%d\t%d\t",p->num,p->cla);k=1;}
+	 p=p->next;
+  }
+ if(k==0) printf("NULL!");
+ printf("\n");
+}
+
+//根据指定位置，返回学生信息 
+Node* mm (LinkList head,int i)
+{ int j;
+  LinkList p,s;
+  p=head;
+  j=0;
+  while(p!=NULL&&j<i)
+  {
+   p=p->next;
+   j++;
+  }
+    if(!p||j>i&&f==0)
+    return NULL;
+    if(j==i&&f==0)
+		printf("学号:%d\t班级:%d\t姓名:%s\n",p->num,p->cla,p->name);
+  if(j==i&&f==1)
+		return p;
+	
+printf("\n");
+   
+} 
+//给定一个学生信息，插入到指定位置 
+int  add(LinkList head,int i)
+ {  Node *p,*s;int k=0;
+ f=1;
+ p=mm( head, i-1);
+  if(p==NULL)
+	   printf("插入失败\n");
+else{
+    k=1;	   
+    s=(Node*)malloc(sizeof(Node));//s新申请的结点 	
+	printf("请输入要插入的学号: ");	
+	scanf("%d",&s->num);	
+    printf("请输入要插入的班级：");	
+	scanf("%d",&s->cla);	
+    printf("请输入要插入的姓名：");	
+	scanf("%s",s->name);
+	s->next=p->next;	
+    p->next=s;
+	}
+    while(head->next&&k==1)
+	{
+	  printf("学号:%d\t班级:%d\t姓名:%s\n",head->next->num,head->next->cla,head->next->name);
+    head=head->next;}
+   
+}
+//删除指定位置的学生信息 
+ Node*de_LinkList(LinkList head,int m)
+{
+ int j;
+  LinkList p,q;
+  p=head; j=1;
+  while(p->next!=NULL&&j<m)
+  {
+  j++; p=p->next;
+  }
+  if(!p->next||j>m)
+   return NULL;
+  q=p->next; p->next=q->next;
+  free(q);
+  return head;
+}
+
+int main()
+{
+   int i,m,a,n,b;
+   LinkList head;
+   head=createlist(n);
+   output( head);
+   printf("输入查找的姓名:") ;
+   search( head);
+   printf("输入指定的位置:");
+   scanf("%d",&a);	
+   mm(head,a);
+   printf("输入插入位置：\n");
+   scanf("%d",&i);
+  add(head,i);
+   scanf("%d",&m);
+  printf("删除第%d个学生；\n",m);
+   de_LinkList(head,m);
+    output(head);
+    return 0;
+}
