@@ -1,0 +1,393 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define MAXSIZE 10
+typedef int ElemType
+typedef struct 
+{
+	ElemType data[MAXSIZE];
+	int length;
+}SqList;
+
+void InitList(SqList *L)
+{
+	L=(SqList*)malloc(sizeof(SqList));
+	L->length=0;
+}
+bool GetList(SqList *L,ElemType a[],int n)
+{
+	if(L->length<n)return false;
+	int i;
+	for(i=0;i<n,i++)
+	{
+		L->data[i]=a[i];
+	}
+	return true;
+}
+
+void DestroyList(SqList *L)
+{
+	free(L);
+}
+int ListInsert(SqList *L,int i,ElemType e)
+{
+	int 
+}
+bool ListEmpty(SqList *L)
+{
+	return(L->length==0)
+}
+
+int ListLength(SqList *L)
+{
+	return(L->length);
+}
+bool DispList(SqList *L)
+{
+	int i;
+	if(ListEmpty(L))return false;
+	for(i=0;i<L->length;i++)
+		printf("%d",L->data[i]);
+	prinft("\n");
+}
+bool GetElem(SqList *L,int i,ElemType &e)
+{
+	i8)
+
+}
+
+
+
+
+
+
+
+
+
+typedef struct Node
+{
+	ElemType data;
+	srtuct Node *next;
+}LNode;
+
+LNode *L;
+
+void CreateList(LinkList *L,ElemType a[],int n)
+{
+	LNode *p;
+	int i;
+	L=(LNode*)malloc(sizeof(LNode));
+	L->next=NULL;
+	for(i=0;i<n;i++)
+	{
+		s=(LNode *)malloc(sizeof(LNode));
+		s->data=a[i];
+		s->next=L->next;
+		L->next=s;
+	}
+}
+void CreateListR(LNode *L,ElemType a[],int n)
+{
+	LNode *s,*r;
+	int i;
+	L=(LNode *)malloc(sizeof(LNode));
+	r=L;
+	for(i=0;i<n;i++)
+	{
+		s=(LNode *)malloc(sizeof(LNode));
+		s->data=a[i];
+		r->next=s;
+		r=s;
+	}
+}
+
+void DsetroyList(LNode *L)
+{
+	LNode *pr=L,*p=L->next;
+	while(p!=NULL)
+	{
+		free(pr);
+		pr=p;
+		p=pr->next;
+	}
+	free(pr);
+}
+
+bool 
+bool GetElem(LNode *L,int i,ElemType &e)
+{
+	int j=0;
+	LNode *p=L;
+	while(j<i&&p!=NULL)
+	{
+		j++;
+		p=p->next;
+	}
+	if(p==NULL)
+		return false;
+	else
+	{
+		e=p->data;
+		return true;
+	}
+}
+int LocateElem(LNode *L,ElemType e)
+{
+	int i=1;
+	LNode *p=L->next;
+	while(p!=NULL&&p->data!=e)
+	{
+		p=p->next;
+		i++;
+	}
+	if(p==NULL)
+		return 0;
+	else
+		return (i);
+}
+bool ListInsert(LNode *L,int i,ElemTyoe e)
+{
+	int j=0;
+	LNode *p=L,*pr=NULL;
+	while(j<i-1&&p!=NULL)
+	{
+		j++;
+		p=p->next;
+	}
+	if(p==NULL) return false;
+	else
+	{
+	pr=(LNode *)malloc(sizeof(LNode));
+	pr->data=e;
+	pr->next=p->next;
+	p->next=pr;
+	return true;
+	}
+}
+bool Delete(LNode *L,int i,ElemTyoe *e)
+{
+	int j=0;
+	LNode *p=L,*pr=NULL;
+	while(j<i-1&&p!=NULL)
+	{
+		p=p->next;
+		j++;
+	}
+	if(p==NULL)
+		return false;
+	else
+	{
+		pr=p->next;
+		if(pr==NULL)
+			return false;
+		e=pr->data;
+		p->next=pr->next;
+		free(p);
+		return true;
+	}
+}
+void CreateList(LNode *L,int n)
+{
+	LNode *p,*r;
+	int i;
+	srand(time(0));
+	*L=(LNode *)malloc(sizeof(LNode));
+	r=L;
+	for(i=0;i<n;i++)
+	{
+		p=(LNode*)malloc(sizeof(LNode));
+		p->data=rand()%100+1;
+		r->next=p;
+		r=p;
+	}
+	r->next=NULL;
+}
+
+typedef struct DNode
+{
+	ElemType data;
+	struct DNode *prior;
+	struct DNode *next;
+}DLNode;
+p->next->prior=p=p->prior->next;
+
+bool InsertNode(DLNode *L,int i,ElemType e)
+{
+	int j=0;
+	DLNode *p=L,*prNULL;
+	while(p!=NULL&&j<i-1)
+	{
+		j++;
+		p->prior=p->next;
+		p->next=p-
+
+}}
+
+s->next=p->next;
+s->prior=p;
+p->next->prior=s;
+p->next=s;
+
+s=p->next;
+p->next->next->prior=p;
+p->next=p->next->next;
+
+p->prior->next=p->next;
+p->next->prior=p->prior;
+
+void CreateList(LNode *L,int n)
+{
+	LNode *p,*r;
+	int i;
+	srand(time(0));
+	L=(LNode *)malloc(sizeof(LNode));
+	r=L;
+	for(i=0;i<n;i++)
+	{
+		p=(LNode*)malloc(sizeof(LNode));
+		p->data=rand()%100+1;
+		r->next=p;
+		r=p;
+	}
+	r->next=NULL;
+}
+
+void CreateList(LinkList *L,ElemType a[],int n)
+{
+	LNode *p;
+	int i;
+	L=(LNode*)malloc(sizeof(LNode));
+	L->next=NULL;
+	for(i=0;i<n;i++)
+	{
+		s=(LNode *)malloc(sizeof(LNode));
+		s->data=a[i];
+		s->next=L->next;
+		L->next=s;
+	}
+}
+void CreateListR(LNode *L,ElemType a[],int n)
+{
+	LNode *s,*r;
+	int i;
+	L=(LNode *)malloc(sizeof(LNode));
+	r=L;
+	for(i=0;i<n;i++)
+	{
+		s=(LNode *)malloc(sizeof(LNode));
+		s->data=a[i];
+		r->next=s;
+		r=s;
+	}
+}
+
+
+
+void CreateList(DLNode *L,int n)
+{
+	DLNode *p,*r;
+	int i;
+	srand (time(0));
+	L=(DLNode *)malloc(sizeof(DLNode));
+	L->prior=L->nnext=NULL;
+	r=L;
+	for(i=0;i<n;i++)
+	{
+		p=(DLNode *)malloc(sizeof(DLNode));
+		p->data=rand()%100+1;
+		p->next=r->next;
+		p->prior=r;
+		r->next->prior=p;
+		r->next=p;
+		r=p;
+	}
+	r->next=NULL;
+}
+
+
+
+
+
+
+bool ListInit(DLNode *L,int i,ElemType e)
+{
+	int j=0;
+	DLNode *p=L,*s=NULL;
+	while(j<i-1&&p!=NULL)
+	{
+		j++;
+		p=p->next;
+	}
+	if(p==NULL)
+		return false;
+	else
+	{
+		s=(DLNode *)malloc(sizeof(DLNode));
+		s->data=e;
+		s->next=p->next;
+        if(p->next!=NULL)
+		{
+			p->next->prior=s;
+		}
+		s->prior=p;
+		p->next
+
+
+
+
+}}
+typedef struct
+{
+	ElemType data[MAXSIZE];
+	int top;
+}SqStack;
+
+bool Push(SqStack *S,ElemType a)
+{
+	if(S->top==MAXSIZE-1)
+	{
+		return false;
+	}
+	S->top++;
+	S->data[S->top]=e;
+	return true;
+}
+bool Pop(SqStack *S,ElemType *e)
+{
+	if(S->top==-1)
+		return false;
+	*e=S->data[S->top];
+	S->top--;
+	return true;
+}
+typedef struct
+{
+	ElemType data[MAXSIZE];
+	int top1;
+	int top2;
+}DSqStack;
+bool Push(DSqStack *S,ElemType e,int stackNumber)
+{
+	if(S->top1+1==S->top2)
+		return false;
+	if(stackNumber==1)
+		S->data[++S->top1]=e;
+	else if(stackNumber==2)
+		S->data(--S->top2)=e;
+	return true;
+}
+bool Pop(DSqStack *S,ElemType *e,int stackNumber)
+{
+	if (stackNumber==1)
+	{
+		if(S->top1==-1)
+			return false;
+		e=S->data[S->top1--];
+	}
+	else if(stackNumber ==2)
+	{
+		if(S->top2==MAXSIZE)
+			return false;
+		e=S->data[S->top2++]
+	}
+	return true;
+}
