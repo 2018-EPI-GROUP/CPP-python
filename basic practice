@@ -1,0 +1,82 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct link
+{
+	int data;
+	struct link *next;
+};
+struct link *AppendNode(struct link *head);   /*定义一个返回值类型为指针的函数*/
+void DisplyNode(struct link *head);
+void DeleteMemory(struct link *head);
+int main()
+{
+	int i=0;
+	char c;
+	struct link *head=NULL;
+	printf("Do you want to append a new node(Y/N)?");
+	scanf("%c",&c);
+	while(c=='Y'||c=='y')
+	{
+		head =AppendNode(head);
+		DisplyNode(head);
+		printf("Do you want to append a new node(Y/N)?");
+		scanf("%c",&c);
+		i++;
+	}
+	printf("%d new nodes have been apended!\n",i);
+	DeleteMemory(head);
+}
+struct link *AppendNode(struct link *head)
+{
+	struct link *p=NULL,*pr=head;
+	int datal;
+	p = (struct link *)malloc(sizeof(struct link));   /*让p指向新建结点，此处为动态分配内存*/  
+/*malloc函数  在内存的动态存储区中分配一个长度为sizeof的内存空间，函数返回值为分配区域的起始地址，
+（可以理解为指针型函数）返回成功则返回分配区域的起始地址，返回不成功就返回NULL
+（struct link *）把这块内存的首地址强制转化成这个结构体的指针类型*/
+	if (p==NULL)
+	{
+		printf("No enough memory to allocate!\n");
+		exit(0);
+	}
+	if (head==NULL)
+	{
+		head=p;
+	}
+	else
+	{
+		while (pr->next!=NULL)
+		{
+			pr=pr->next;
+		}
+		pr->next=p;
+	}
+	printf("Input node data:\n");
+	scanf("%d",&data);
+	p->data=data;
+	p->next=NULL;
+	return head;
+}
+void DisplyNode(struct link *head)
+{
+	struct link *p=head;
+	int j=1;
+	while (p != NULL)
+	{
+		printf("%5d%10d\n",j,p->data);
+		p=p->next;
+		j++;
+	}
+}
+/*释放head指向的链表中所有节点占用的内存*/
+void DeleteMemory(struct link *head)
+{
+	struct link *p = head , *pr = NULL;
+	while(p != NULL)
+	{
+		pr = p;
+		p = p->next;
+		free(pr);
+	}
+}
+
