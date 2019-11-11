@@ -1,22 +1,22 @@
-int romanToInt(char * s){
-    int len = strlen(s);
-    if (len == 0£© return 0;
-    int ans = 0;
-    
-    for(int i=0; i < len; ++i) {
-        switch (s[i]) {
-            case 'M': ans+=1000;break;
-            case 'D': ans+=500;break;  
-            case 'C': ans+=100; if(i < (len - 1)) if(s[i+1] == 'M' || s[i+1] == 'D') ans-=200; break;
-            case 'L': ans+=50; break;
-            case 'X': ans+=10; if(i < (len - 1)) if(s[i+1] == 'L' || s[i+1] == 'C') ans-=20; break;
-            case 'V': ans+=5;  break;
-            case 'I': ans+=1;  if(i < (len - 1)) if(s[i+1] == 'X' || s[i+1] == 'V') ans-=2; break;
-            default: break;
+int romanToInt(char* s) {
+    int len,lenn,k=0,h=0,m=0;
+    len=strlen(s);lenn=len;
+    int count=0;
+    char a[7]={'I','V','X','L','C','D','M'}; 
+    int b[7]={1,5,10,50,100,500,1000};
+  for(int i=0;i<len;i++)  
+  {   lenn--;
+      for(int j=0;j<7;j++) {  if (s[i]==a[j])  {k=j;break;} }
+      for(int j=0;j<7;j++) { if (s[i+1]==a[j])  {h=j;break;}}
+      count+=b[k]; 
+  if (k==0 && (h==1||h==2)) {count+=-2*b[0]+b[h];i++;lenn--;}
+  if (k==2 && (h==3||h==4)) {count+=-2*b[2]+b[h];i++;lenn--;}
+  if (k==4 && (h==5||h==6)) {count+=-2*b[4]+b[h];i++;lenn--;}
 
-                
-        }
+   if (lenn==1)  { for(int j=0;j<7;j++) { if (s[i+1]==a[j])  {h=j;break;}} count+=b[h];  break;}
+   if (lenn==0)  break;
     }
 
-
+ return count;  
 }
+
