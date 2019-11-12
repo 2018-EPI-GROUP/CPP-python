@@ -209,3 +209,137 @@ typedef struct TreeNode{
 （3）层次遍历
 
   从树的第一层（根节点）开始，从上至下逐层遍历，在同一层中，则按从左到右的顺序对结点逐个访问。
+  
+  
+  一：二叉树
+1.定义：一棵二叉树是结点的一个有限集合，该集合或者为空，或者是由一个根节点加上两棵别称为左子树和右子树的二叉树组成。
+
+2.二叉树的特点：
+   a.每个结点最多有两棵子树，即二叉树不存在度大于2的结点。
+   b.二叉树的子树有左右之分，其子树的次序不能颠倒。
+
+3.二叉树的基本性质
+(1). 在二叉树的第ｉ（ｉ>=１）层最多有２＾(ｉ - １)个结点。
+(2). 深度为k(k>=0)的二叉树最少有k个结点，最多有２＾ｋ－１个结点。
+(3). 对于任一棵非空二叉树，若其叶结点数为n0，度为2的非叶结点数为n2，则ｎ0 = ｎ2 ＋１。
+(4). 具有n个结点的完全二叉树的深度为int_UP（log(2，ｎ+1)）。
+(5). 如果将一棵有n个结点的完全二叉树自顶向下，同一层自左向右连续给结点编号１，２，３，．．．．．．，ｎ，然后按此结点编号将树中各结点顺序的存放于一个一维数组，并简称编号为i的结点为结点i（ ｉ>=１ && ｉ<=ｎ）,则有以下关系：
+a.若 ｉ= 1，则结点i为根，无父结点；若 ｉ> 1，则结点 i 的父结点为结点int_DOWN（ｉ / ２）;
+b.若 ２＊ｉ <= ｎ，则结点 ｉ 的左子女为结点 ２＊ｉ；
+c.若２＊ｉ＜＝ｎ，则结点ｉ的右子女为结点２＊ｉ＋１；
+d.若结点编号ｉ为奇数，且ｉ！＝１，它处于右兄弟位置，则它的左兄弟为结点ｉ－１；
+e.若结点编号ｉ为偶数，且ｉ！＝ｎ，它处于左兄弟位置，则它的右兄弟为结点ｉ＋１；
+
+4.二叉树的存储方式
+二叉树一般可以使用两种结构存储，一种顺序结构，一种链式结构。
+  
+ 顺序存储表示的描述如下：
+#define MAX   //二叉树的最大节点数
+typedef elemtype SqBitree[MAX]    //0号元素存放根结点
+SqBiTree bt;
+   
+ 链式存储结构表示的描述如下：
+用链表来表示一颗二叉树，即用链指针来指示元素的逻辑关系。
+链表中的每一个结点有三个域组成，除了数据域外，还有两个指针域，分别用来给出该结点的左孩子和右孩子所在的链结点的存储地址。
+typedef struct node
+{  elemtype data;
+     struct node *lchild,*rchild;
+}  BiTNode,*BiTree;
+将BiTree定义为指向二叉链表结点结构的指针类型. 
+5.二叉树的遍历
+（1）先序遍历
+ 根节点——>左子树——>右子树
+Void PreOrder(Bitree bt)
+{
+ //先序遍历二叉树bt
+If(bt==NULL) return;
+Visite(bt->data);
+PreOrder(bt->lchild);
+PreOrder(bt->rchild);
+}
+(2)中序遍历
+左子树——>根节点——>右子树
+Void InOrder(Bitree bt)
+{
+ //先序遍历二叉树bt
+If(bt==NULL) return;
+InOrder(bt->lchild);
+Visite(bt->data);
+InOrder(bt->rchild);
+}
+（3）后序遍历
+根节点——>左子树——>右子树
+Void PostOrder(Bitree bt)
+{
+ //先序遍历二叉树bt
+If(bt==NULL) return;
+PostOrder(bt->lchild);
+PostOrder(bt->rchild);
+Visite(bt->data);
+
+}
+6.C++类和对象
+C++ 是一门面向对象的编程语言，理解 C++，首先要理解类（Class）和对象（Object）这两个概念。
+
+C++ 中的类（Class）可以看做C语言中结构体（Struct）的升级版。结构体是一种构造类型，可以包含若干成员变量，每个成员变量的类型可以不同；可以通过结构体来定义结构体变量，每个变量拥有相同的性质。例如：
+#include <stdio.h>
+//定义结构体 Student
+struct Student
+{
+    //结构体包含的成员变量
+    char *name;
+    int age;
+    float score;
+};
+//显示结构体的成员变量
+void display(struct Student stu)
+{
+    printf("%s的年龄是 %d，成绩是 %f\n", stu.name, stu.age, stu.score);
+}
+int main()
+{
+    struct Student stu1;
+    //为结构体的成员变量赋值
+    stu1.name = "小明";
+    stu1.age = 15;
+    stu1.score = 92.5;
+    //调用函数
+    display(stu1);
+    return 0;
+}
+运行结果：
+小明的年龄是 15，成绩是 92.500000
+
+C++ 中的类也是一种构造类型，但是进行了一些扩展，类的成员不但可以是变量，还可以是函数；通过类定义出来的变量也有特定的称呼，叫做“对象”。
+例如：
+#include <stdio.h>
+//通过class关键字类定义类
+class Student
+{
+public:
+    //类包含的变量
+    char *name;
+    int age;
+    float score;
+    //类包含的函数
+void say()
+{
+        printf("%s的年龄是 %d，成绩是 %f\n", name, age, score);
+    }
+};
+int main()
+{
+    //通过类来定义变量，即创建对象
+    class Student stu1;  //也可以省略关键字class
+    //为类的成员变量赋值
+    stu1.name = "小明";
+    stu1.age = 15;
+    stu1.score = 92.5f;
+    //调用类的成员函数
+    stu1.say();
+    return 0;
+}
+运行结果与上例相同。
+C语言中的 struct 只能包含变量，而 C++ 中的 class 除了可以包含变量，还可以包含函数。display() 是用来处理成员变量的函数，在C语言中，我们将它放在了 struct Student 外面，它和成员变量是分离的；而在 C++ 中，我们将它放在了 class Student 内部，使它和成员变量聚集在一起，看起来更像一个整体。
+
+结构体和类都可以看做一种由用户自己定义的复杂数据类型，在C语言中可以通过结构体名来定义变量，在 C++ 中可以通过类名来定义变量。不同的是，通过结构体定义出来的变量还是叫变量，而通过类定义出来的变量有了新的名称，叫做对象（Object）。
