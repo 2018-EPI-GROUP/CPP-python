@@ -35,3 +35,47 @@ return result;
             if( i>= j)  return true;
 	}
 }
+
+三.删除排序链表中的重复元素
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        ListNode *s,*p,*q,*r,*t;
+        int x;
+        scanf("%d",&x);
+        head=(ListNode*)malloc(sizeof(ListNode));
+         head->next=NULL;
+        while(x)
+        { 
+         s=(ListNode*)malloc(sizeof(ListNode));
+          s->val=x;
+         if(head==NULL) head=s;
+         else r->next=s;
+          r=s;
+          scanf("%d",&x);
+        }
+        p=head->next;
+        while(p->next)
+        {
+            q=p;
+            while(q->next)
+            { if(q->next->val==p->val)
+                {
+                    t=q->next;
+                    q->next=t->next;
+                    free(t);
+                }
+                else q=q->next;
+            }p=p->next;
+        }   
+        return head;
+};
+};
