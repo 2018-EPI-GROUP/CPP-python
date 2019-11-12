@@ -283,3 +283,65 @@ int main()
  
     return 0;
 }
+//后缀表达式求值
+
+#include <stdio.h>
+#include <stdlib.h>
+#define max 100000
+
+typedef struct LINK
+{
+    int s[ max ];
+    int top;
+}LINK;
+
+int make_end( char ch , int left, int right )
+{
+    int num ;
+    switch( ch )
+    {
+        case '+': num = left + right;break;
+        case '-': num = left - right;break;
+        case '*': num = left * right;break;
+        case '/': num = left / right;break;
+        case '%': num = left % right;break;
+    }
+    return num;
+}
+
+int main()
+{
+    char a[ max ];  int i = 0 , b[ max ],j = 0;
+    while( ( a[ i ] = getchar() ) != '@' )  i++ ;
+    a[ i ] = '\0';  //输入后缀表达式, len = i ;
+
+    int len = i ,num ;   LINK L;  L.top = -1;
+
+    for( i = 0; a[ i ] != '\0'; i++ )
+    {
+        int temp ;
+        if( a[ i ] >= '0' && a[ i ] <= '9' ) //提取数值
+        {
+            int k = i + 1;
+            temp = a[ i ] - '0';
+            while( a[ k ] >= '0' && a[ k ] <= '9' )
+            {
+                temp = 10 * temp + ( a[ k ] - '0') ;
+                i++; k++;
+            }
+            L.top ++;
+            L.s[ L.top ] = temp;
+        }
+        else if( a[ i ] == '+' || a[ i ] == '-' || a[ i ] == '*' || a[ i ] == '/' || a[ i ] == '%' )
+        {
+            num = make_end( a[i] , L.s[ L.top - 1 ] , L.s[ L.top ] );
+            L.s[ L.top - 1 ] = num;
+            L.s[ L.top ] = 0;
+            L.top -- ;
+        }
+    }
+
+    printf("%d\n", L.s[ L.top ]);
+    return 0;
+}
+
