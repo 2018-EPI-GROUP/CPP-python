@@ -4,9 +4,10 @@ class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) 
 {   vector<int> result; 
-	for(int i = 0; i < nums.length; i++)
+        
+	for(int i = 0; i < nums[max]; i++)
    { 
-      for(int j = i + 1; j < nums.length; j++) 
+      for(int j = i + 1; j < nums[max]; j++) 
       {   
 	     if(nums[i] + nums[j] == target) 
          {result[0] = i;         
@@ -34,7 +35,9 @@ return result;
             if(i != j)  return false;
             if( i>= j)  return true;
 	}
-}
+     }
+   };
+};
 
 三.删除排序链表中的重复元素
 /**
