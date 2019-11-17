@@ -1,0 +1,45 @@
+struct ListNode* aaa(struct ListNode *a,struct ListNode *b);
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+
+
+struct ListNode* reverseList(struct ListNode* head){
+    
+    if(head == NULL||head->next == NULL){
+        return head;
+    }
+    /*
+    else{
+        return aaa(NULL,head);
+    }
+    */
+    struct ListNode *q,*p,*s;
+    p = head;
+    q = NULL;
+    while(p != NULL){
+        s = p;
+        p = p->next;
+        s->next = q;
+        q = s;
+    }
+    return q;
+}
+/*
+struct ListNode* aaa(struct ListNode *a,struct ListNode *b){
+    struct LIstNode *q;
+    if(b->next == NULL){
+        b->next = a;
+        return b;
+    }
+    else{
+        q = b->next;
+        b->next = a;
+        return aaa(b,q);
+    }
+}
+*/
