@@ -1,0 +1,65 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+/*
+
+
+
+
+//递归实现：
+struct zhan{
+    int flag;
+    int *val;
+};
+
+int a(struct TreeNode * root){
+    struct TreeNode *q,*p;
+    if(root == NULL){
+        return 0;
+    }
+    return 1+a(root->left)+a(root->right);
+}
+void b(struct TreeNode * root,struct zhan *z){
+    if(root == NULL){
+        return;
+    }
+    *(z->val+z->flag+1) = root->val;
+    z->flag += 1;
+    b(root->left,z);
+    b(root->right,z);
+}
+int* preorderTraversal(struct TreeNode* root, int* returnSize){
+    *returnSize = a(root);
+    struct zhan *z;
+    z = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    int *x;
+    x = (int*)malloc(sizeof(int)*a(root));
+    z->val = x;
+    z->flag = -1;
+    b(root,z);
+    return z->val;
+}
+*/
+
+
+//迭代实现：
+struct zhan1{
+    int val;
+    struct zhan1 *next;
+};
+struct zhan2{
+    struct TreeNode *val;
+    struct zhan2 *next;
+};
+struct 
+int* preorderTraversal(struct TreeNode* root, int* returnSize){
+    
+}

@@ -1,0 +1,30 @@
+
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* dailyTemperatures(int* T, int TSize, int* returnSize){
+    int i,*x,j,top,y[30000][2];
+    top = -1;
+    x = (int*)malloc(sizeof(int)*TSize);
+    *returnSize = TSize;
+    for(i = 0;i< TSize;i++) x[i] = 0;
+    y[++top][0] = T[0];
+    y[top][1] = 0;
+    for(i = 1;i < TSize;i++){
+        if(y[top][0]>=T[i]){
+            y[++top][0] = T[i];
+            y[top][1] = i;
+        }
+        else{
+            while(top>=0&&y[top][0] < T[i]){
+                x[y[top][1]] = i-y[top][1];
+                top--;
+            }
+            y[++top][0] = T[i];
+            y[top][1] = i;
+        }
+    }
+    return x;
+}
+

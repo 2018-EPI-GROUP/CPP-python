@@ -1,0 +1,77 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+
+struct zhan{
+    struct TreeNode *val;
+    struct zhan *next;
+};
+
+void push(struct zhan *top,struct TreeNode *val){
+    struct zhan *q;
+    q = (struct zhan*)malloc(sizeof(struct zhan));
+    q->val = val;
+    q->next = top->next;
+    top->next = q;
+}
+void pop(struct zhan *top){
+    if(top->next == NULL) return;
+    struct zhan *q;
+    q = top->next;
+    top->next = q->next;
+    q->next = NULL;
+    free(q);
+}
+struct TreeNode * get(struct zhan *top){
+    if(top->next == NULL) return NULL;
+    return top->next->val;
+}
+
+int num(struct TreeNode *root){
+    if(root == NULL) return 0;
+    return num(root->left)+num(root->right)+1;
+}
+int* inorderTraversal(struct TreeNode* root, int* returnSize){
+    if(root ==NULL) {
+        *returnSize = 0;
+        return NULL;}
+    struct zhan *top;
+    top = (struct zhan*)malloc(sizeof(struct zhan));
+    top->val = NULL;
+    top->next = NULL;
+    int x;
+    *returnSize = 0;
+    x = num(root);
+    int *bl,i_top;
+    bl = (int*)malloc(sizeof(int)*x);
+    i_top = 0;
+    struct TreeNode *q,*p;
+    push(top,root);
+    while(top->next){
+        q = get(top);pop(top);
+        while(q->left!=NULL){
+            push(top,q);
+            q = q->left;
+        }
+        bl[i_top++] = q->val;
+        while(q->right==NULL&&top->next!=NULL){
+            q = get(top);pop(top);
+            bl[i_top++] = q->val;
+        }
+        if(q->right==NULL&&top->next == NULL) break;
+        push(top,q->right);
+    }
+    *returnSize = i_top;
+    return bl;
+}
+

@@ -1,0 +1,41 @@
+
+
+bool isValid(char * s){
+    int i;
+    char a[100000];
+    int top = -1;
+    for(i = 0;*(s+i)!='\0';i++){
+        switch(*(s+i)){
+            case '(':
+            case '[':
+            case '{':
+                top++;
+                a[top] = *(s+i);
+                continue;
+            case ')':
+                if(top<0) return 0;
+                if(a[top] == '('){
+                    top--;
+                    continue;
+                }
+                return 0;
+            case ']':
+                if(top<0) return 0;
+                if(a[top] == '['){
+                    top--;
+                    continue;
+                }
+                return 0;
+            case '}':
+                if(top<0) return 0;
+                if(a[top] == '{'){
+                    top--;
+                    continue;
+                }
+                return 0;
+        } 
+    }
+    if(top<0) return 1;
+    return 0;
+}
+

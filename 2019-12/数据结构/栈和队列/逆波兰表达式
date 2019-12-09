@@ -1,0 +1,103 @@
+
+struct zhan {
+	char *s;
+	struct zhan *next;
+};
+int void_zhan(struct zhan *obj) {
+	if (obj->next == NULL) return 1;
+	return 0;
+}
+void push(struct zhan *obj, char *s) {
+	struct zhan *q;
+	q = (struct zhan *)malloc(sizeof(struct zhan));
+	q->s = s;
+	q->next = obj->next;
+	obj->next = q;
+}
+void pop(struct zhan *obj) {
+	if (void_zhan(obj)) return;
+	struct zhan *q;
+	q = obj->next;
+	obj->next = q->next;
+	q->next = NULL;
+	free(q);
+}
+char * get(struct zhan *obj) {
+	if (void_zhan(obj)) return NULL;
+	return obj->next->s;
+}
+int int_str(char *l) {
+	int i, a = 0;
+	char *s = l;
+	int flag = 1;
+	if (*(s) == '-') {
+		s = s + 1;
+		flag = -1;
+	}
+	if (*(s) == '+') {
+		s = s + 1;
+		flag = 1;
+	}
+	for (i = 0; *(s + i) != '\0'; i++) {
+		a = a * 10 + (int)(*(s + i) - '0');
+	}
+	return a*flag;
+}
+char* ys(char *s1, char *s2, char *s3) {
+	int a, b, i, j,flag=1;
+	a = int_str(s1);
+	b = int_str(s2);
+	switch (*s3) {
+	case '-': a -= b; break;
+	case '+': a += b; break;
+	case '/': a /= b; break;
+	case '*': a *= b; break;
+	}
+	b = a;
+	for (i = 0; b != 0; i++) {
+		b /= 10;
+	}
+	char *s;
+	if (a < 0) {
+		flag = 2;
+		a = -a;
+	}
+	s = (char *)malloc(sizeof(char)*(i + flag));
+	for (j = 0; j < i+flag-1; j++) {
+		*(s + i +flag - j - 2) = (char)('0'+a % 10);
+		a /= 10;
+	}
+	if (flag == 2) *(s) = '-';
+	*(s + i+flag-1) = '\0';
+	return s;
+}
+int evalRPN(char ** tokens, int tokensSize) {
+	int i, j, flag = 0;
+	struct zhan *obj;
+	obj = (struct zhan *)malloc(sizeof(struct zhan));
+	obj->s = NULL;
+	obj->next = NULL;
+	char a[5][2] = { "+","-","*","/" };
+	char *s1, *s2;
+	for (i = 0; i < tokensSize; i++) {
+		flag = 0;
+		for (j = 0; j < 4; j++) {
+			if (strcmp(&a[j][0], *(tokens + i)) == 0) {
+				flag = 1;
+				break;
+			}
+		}
+		if (flag) {
+			s2 = get(obj); pop(obj);
+			s1 = get(obj); pop(obj);
+			push(obj, ys(s1, s2, *(tokens+i)));
+		}
+		else {
+			push(obj, *(tokens+i));
+		}
+		
+	}
+	s1 = get(obj); pop(obj);
+	return int_str(s1);
+}
+
