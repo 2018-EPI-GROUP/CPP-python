@@ -175,3 +175,150 @@ int main()
 
    
 
+```c++
+class Date
+{
+public:
+	Date(int year, int month, int day)
+	{
+		_year = year;
+		_month = month;
+		_day = day;
+	}
+private:
+	int _day;
+	int _month;
+	int _year;
+};
+```
+
+1.虽然上述构造函数调用之后，对象中已经有了一个初始值，但是不能将其称作为类对象成员的初 始化，构造函数体中的语句只能将其称作为赋初值，而不能称作初始化。因为初始化只能初始化 一次，而构造函数体内可以多次赋值。
+
+1.2 初始化列表 
+初始化列表：以一个冒号开始，接着是一个以逗号分隔的数据成员列表，每个"成员变量"后面跟 一个放在括号中的初始值或表达式。
+
+```c++
+class Date
+{
+public:
+	//初始化
+	Date(int year, int month, int day)
+		:_year(year),
+		_month(month),
+		_day(day)
+	{}
+
+private:
+	int _day;
+	int _month;
+	int _year;
+};
+```
+
+【注意】
+
+1. 每个成员变量在初始化列表中只能出现一次(初始化只能初始化一次) 
+2.  类中包含以下成员，必须放在初始化列表位置进行初始化： 引用成员变量 const成员变量 自定义类型成员(该类没有默认构造函数)
+
+```c++
+class A
+{
+public:
+	A(int a)
+		:_a(a)
+	{}
+public:
+	void show()
+	{
+		cout << _a << endl;
+	}
+private:
+	int _a;
+};
+class B
+{
+public:
+	B(int a,int ref)
+		:_aobj(a)
+		,_ref(ref)
+		,_n(10)
+	{}
+
+private:
+	A _aobj;//没有默认构造函数
+	int& _ref;//引用
+	const int _n;//const
+};
+void main()
+{
+	A t1(20);
+	B t(30,40);
+	t1.show();
+}
+```
+
+3. 尽量使用初始化列表初始化，因为不管你是否使用初始化列表，对于自定义类型成员变量， 一定会先使用初始化列表初始化。
+
+   ```c++
+   class Time
+   {
+   public:
+   	Time(int hour = 0)
+   		:_hour(hour)
+   	{
+   		cout << "Time(_hour)" << endl;
+   	}
+   	void show()
+   	{
+   		cout << _hour << endl;
+   	}
+   private:
+   	int _hour;
+   };
+   class Date
+   {
+   public:
+   	Date(int day)
+   	{
+   		_day = day;
+   	}
+   private:
+   	int _day;
+   	Time _t;
+   };
+   int main()
+   {
+   	Time d1(2);
+   	d1.show();
+   	return 0;
+   }
+   ```
+
+   1.3 explicit关键字 
+   构造函数不仅可以构造与初始化对象，对于单个参数的构造函数，还具有类型转换的作用。
+
+   ```c++
+   class Date
+   {
+   public:
+   	Date(int year)
+   		:_year(year)
+   	{}
+   	explicit Date(int year)
+   		:_year(year)
+   	{}
+   private:
+   	int _year;
+   	int _momth;
+   	int _day;
+   };
+   void TestDate()
+   {
+   	Date d1(2018);
+   	// 用一个整形变量给日期类型对象赋值 
+   	// 实际编译器背后会用2019构造一个无名对象，最后用无名对象给d1对象进行赋值
+   }
+   ```
+
+   
+
