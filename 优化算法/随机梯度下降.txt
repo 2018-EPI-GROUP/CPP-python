@@ -1,0 +1,33 @@
+#仅做比较，不运行。
+
+#批量梯度下降，又叫梯度下降
+X = data_input
+Y = labels
+
+parameters = initialize_parameters(layers_dims)
+for i in range(0,num_iterations):
+    #前向传播
+    A,cache = forward_propagation(X,parameters)
+    #计算损失
+    cost = compute_cost(A,Y)
+    #反向传播
+    grads = backward_propagation(X,Y,cache)
+    #更新参数
+    parameters = update_parameters(parameters,grads)
+
+#随机梯度下降算法：
+X = data_input
+Y = labels
+parameters = initialize_parameters(layers_dims)
+for i in (0,num_iterations):
+    for j in m:
+        #前向传播
+        A,cache = forward_propagation(X,parameters)
+        #计算成本
+        cost = compute_cost(A,Y)
+        #后向传播
+        grads = backward_propagation(X,Y,cache)
+        #更新参数
+        parameters = update_parameters(parameters,grads)
+
+
