@@ -1,0 +1,374 @@
+\documentclass[UTF8]{ctexrep}
+
+\title{人工智能}
+\author{}
+\date{}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{ctex}
+\usepackage{mathtools}
+\usepackage{graphics}
+\usepackage{extarrows}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\chapter{优化算法}
+\section{mini-batch梯度下降法}
+使用好的优化算法可以提高效率
+
+把所以的$m$个样本都放在一个矩阵里面
+$$X=[x^{(1)},x^{(2)},x^{(3)},\dots,x^{(m)}]$$
+$$Y=[y^{(1)},y^{(2)},y^{(3)},\dots,y^{(m)}]$$
+以上$X$的维数是$(n_x,m)$,$Y$的维数是$(1,m)$
+
+这样的向量化可以很快的处理样本，但是如果$m$很大的话，处理速度仍然会很慢
+(这里的$m$是样本的数量，每一个$x_i$的维度是$x_n$)
+
+我们可以先让梯度下降分处理一部分的训练集，这样可以加快训练速度
+
+进一步，可以把一个训练集分割成多个小的训练集，这些小的子集被称为Mini-batch 
+
+这些小的子集，依顺序命名为$X^{\{t\}}$和$Y^{\{t\}}$
+
+\begin{enumerate}
+    \item mini-batch size=m : 这个便是之前的batch梯度下降法\\
+    \item mini-batch size=1 : 这种算法叫做随机梯度下降法
+\end{enumerate}
+mini-batch梯度下降法 的size 大小在上述两种情况之间
+
+如果样本的数量小于2000个，可以直接使用 batch梯度下降 算法
+
+mini-batch size通常取$[64,512]$之间，而且取的是$2$的倍数，这样代码运行速度会快一点
+
+$X^{\{t\}}$和$Y^{\{t\}}$的大小通常要符合CPU或者GPU的内存(这里我的理解是，CPU是内存，GPU是显存)
+
+
+\section{指数加权移动平均值}
+例如：
+
+\begin{align*}
+    \theta_1&=40^\circ F\\
+    \theta_2&=49^\circ F\\
+    \theta_3&=45^\circ F\\
+    &\ \ \vdots\\
+    \theta_{180}&=60^\circ F\\
+    \theta_{181}&=56^\circ F\\
+    &\ \ \vdots\\
+\end{align*}
+
+加权后：
+
+    \begin{align*}
+        v_0&=0\\
+        v_1&=0.9v_0+0.1\theta_1\\
+        &\ \ \vdots\\
+        v_t&=0.9v_{t-1}+0.1\theta_t
+    \end{align*}
+
+即：
+$$v_t=\beta v_{t-1}+(1-\beta)\theta_t$$
+
+可以把$v_t$认为是$t$之前$\frac1{1-\beta}$个数据的平均值
+
+当$\beta$的值越大的时候，点$V_t$所构成的曲线就越平滑，但是曲线会整体向右移动
+
+$$v_\theta = 0$$
+$$v_\theta := \beta v+(1-\beta)\theta_t$$
+
+\subsection{偏差修正}
+由于$v_0=0$所以数据初始的时候会与正常的数据小很多
+
+对此，有：
+
+对于第$t$天，我们不直接使用$v_t$作为数据，我们
+使用$\frac{v_t}{1-\beta^t}$来作为每天的加权平均值
+
+但是这个对于机器学习是非必要的，因为这个仅仅影响了前期的数据
+，后面的数据和修正后的数据偏差不大。
+
+\section{Momentum梯度下降法}
+Momentum梯度下降法总是快于标准的梯度下降算法
+
+设当前为第$t$次迭代，假设我们已经计算出来了$dw,db$正常的梯度下降法应该是：
+$$w=w-\alpha dw$$
+$$b=b-\alpha db$$
+在Momentum梯度下降法中，我们使用一下的公式：
+$$v_{dw}=\beta v_{dw}+(1-\beta)dw$$
+$$v_{db}=\beta v_{db}+(1-\beta)db$$
+$$w=w-\alpha v_{dw}$$
+$$b=b-\alpha v_{db}$$
+这是因为，每次的迭代一般都使得参数$W$更偏向与目标值，但是也会朝梯度下降垂直的方向上移动
+，由于这些移动总是来回的摆动，所以可以使用均值的方法吧这些摆动消除掉，同时也可以增加梯度下降方向上的速度
+
+这个算法中包含了两个超参数：$\alpha$与$\beta$
+，其中$\beta$的常用值是$0.9$
+
+这里的加权平均可以不用进行偏参修正
+
+有的人使用的公式可能是不一样的：
+$$v_{dw}=\beta v_{dw}+dw$$
+$$v_{db}=\beta v_{db}+db$$
+这里没有$(1-\beta)$，这样的话，在更新$w$和$b$的时候，$v_{dw}$与$v_{db}$就需要乘于一个$\frac1{1-\beta}$
+
+
+\section{RMSprop算法}
+全名为："root mean square prop"
+
+可以加速梯度下降
+
+设当前为第$t$次迭代，有：
+$$S_{dw}=\beta S_{dw}+(1-\beta)dw^2$$
+$$S_{db}=\beta S_{db}+(1-\beta)db^2$$
+$$w=w-\alpha\frac{dw}{\sqrt{S_{dw}}}$$
+$$b=b-\alpha\frac{db}{\sqrt{S_{db}}}$$
+
+在实际操作过程中，为了避免分母为零或者非常趋近与零的情况，我们在分母上加上一个很小的数$\varepsilon$
+,例如$\varepsilon = 10^{-8}$
+
+这个算法是起到一个归一化的作用
+
+\section{Adam算法}
+这个算法是上述两个算法的结合
+
+同样对于第$t$次迭代，有：
+$$v_{dw}=\beta_1 v_{dw}+(1-\beta_1)dw$$
+$$v_{db}=\beta_1 v_{db}+(1-\beta_1)db$$
+$$S_{dw}=\beta_2 S_{dw}+(1-\beta_2)dw^2$$
+$$S_{db}=\beta_2 S_{db}+(1-\beta_2)db^2$$
+在进行Adam算法的时候，一般要进行 偏差修正 
+$$v_{dw}^{corrected}=\frac{v_{dw}}{1-\beta_1^t}$$
+$$v_{db}^{corrected}=\frac{v_{db}}{1-\beta_1^t}$$
+$$S_{dw}^{corrected}=\frac{S_{dw}}{1-\beta_2^t}$$
+$$S_{db}^{corrected}=\frac{S_{db}}{1-\beta_2^t}$$
+$$w=w-\alpha\frac{v_{dw}^{corrected}}{\sqrt{S_{dw}^{corrected}}+\varepsilon}$$
+$$b=b-\alpha\frac{v_{db}^{corrected}}{\sqrt{S_{db}^{corrected}}+\varepsilon}$$
+超参数$\alpha$通常要调试，可以取一系列的值进行测试
+，$\beta_1$的缺省值通常是0.9， $\beta_2$通常推荐使用0.999，$\varepsilon = 10^{-8}$
+
+\section{逐步减小学习率}
+随着迭代的次数增加，学习率也逐步减小
+，这样做可以在初始时有较大的步骤，但是在后期可以以很小的步骤去逼近目标值
+
+\section{局部最优问题}
+在三维空间中，使用梯度下降法，最可能会到达局部最优点，即一个极小值点
+
+但是在高维的空间中，局部最优点往往不是那么容易到达，最容易到达的是鞍点
+
+所以我们可以不用考虑局部最优的问题，转而考虑鞍点
+
+但是由于mini-batch算法本身的特性，使得网络很容易就可以走出鞍点
+
+我们应该重点考虑的应该是一些比较平缓的函数，例如高原一样
+
+\chapter{超参数调试、Batch正则化和程序框架}
+
+\section{调试处理}
+如何系统地组织超参数调试过程的技巧
+
+如何处理超参数
+
+$\alpha$(学习率)\\$\beta$(momentum算法)\\
+$\beta_1,\beta_2,\epsilon$(Adam算法)\\
+
+还有 网络层数，每层节点个数，学习率递减参数
+
+Mini-batch的大小
+
+学习速率是最重要的\\其次是momentum算法中的参数
+、网络节点个数、Mini-batch大小\\然后是网络层数，递减参数，最后才是Adam算法的参数
+
+假如有两个超参数，可以随机在平面中选取25个点，然后代入
+
+如果发现一个范围内的点效果更好，那么就可以集中在这个区域去取值
+
+随机取值实在一个合适的范围内取值
+
+在一个范围内可以均匀取值，也可以以其他的方式取值
+
+例如，学习率如果范围为$[0.0001,1]$之间，应该在对数轴上取值
+
+如： \\r = -4*np.random.rand()
+\\$\alpha=10^r$
+
+但是对于$\beta$，这是一个加权平均值的参数
+，如果假设$\beta \in [0.9,0.999]$的话
+
+我们可以让$1-\beta$在对数轴上取值
+
+熊猫方法 和 鱼子酱方法
+
+有你的计算机配置决定
+
+\section{Batch归一化}
+
+使得神经网络对超参数的选择更加的稳定
+
+使得更容易训练网络和深层网络
+
+在之前logistic回归的过程中，使用归一化处理使得训练集达到去平均的目的
+$$\mu = \frac1m\sum x^{(i)}$$
+$$x = x-\mu$$
+$$\sigma^2 = \frac1m\sum x^{(i)2}$$
+$$x = x/\sigma^2$$
+
+问题：在深度神经网络中，是否可以归一化每一层的$a$
+，从而更快的训练$w,b$
+
+\subsection{单层网络中使用归一化}
+通常的操作是归一化$z$，即在激活函数之间就进行归一化处理
+
+设$z^{(1)}\dots z^{(m)}$是隐藏单元值，即$z^{[l](i)},i=1,2,\dots,m$，下面是处理单层的归一化操作：
+
+计算平均值：
+$$\mu = \frac1m\sum_iz^{(i)}$$
+计算方差：
+$$\sigma^2 = \frac1m\sum_i(z^{(i)}-\mu)^2$$
+归一化：
+$$z_{norm}^{(i)}=\frac{z^{(i)}-\mu}{\sqrt{\sigma^2+\epsilon}}$$
+
+为了不使该层的单元是归一化的
+$$\tilde z^{(i)} = \gamma z^{(i)}_{norm}+\beta$$
+这里的$\gamma$和$\beta$是学习参数，这两个参数可以使我们可以随意的设置平均值和方差
+
+如果我们想要把方差设置为$\sigma_1$，平均值为$\mu_1$那么，我们可以使：
+$$\gamma = \sqrt{\sigma_1^2+\epsilon},\beta = \mu_1$$
+
+这样的操作后，如果再使用sigma函数，可以让数据更好的散布在非线性的范围内。
+
+\subsection{深度网络中使用batch归一化}
+
+batchnorm简称为BN
+
+$$x \xrightarrow{w^{[1]},b^{[1]}}z^{[1]}\xrightarrow[\text{BN}]{\beta^{[1]},\gamma^{[1]}}\tilde z\xrightarrow a^{[1]}=g^{[1]}(\tilde z^{[1]})\xrightarrow{w^{[2]},b{[2]}}z^{2}
+\xrightarrow[BN]{\beta^{[2]},\gamma^{[2]}}\tilde z^{[2]}\to a^{[2]}\to \dots$$
+
+参数：
+$$w^{[1]},b^{[1]},w^{[2]},b^{[2]},\dots,w^{[L]},b^{[L]}$$
+$$\beta^{[1]},\gamma^{[1]},\beta^{[2]},\gamma^{[2]},\dots,\beta^{[L]},\gamma^{[L]}$$
+这里的$\beta$和Momentum,RMSprop算法,Adam算法的$\beta$不一样
+
+这里的$\beta$也需要更新，即：
+$$\beta^[l] = \beta^[l]-\alpha d\beta^[l]$$
+
+这里的batch归一化通常是和mini-batch一起进行的，所以有：
+$$X^{\{1\}}\xrightarrow{w^{[1]},b^{[1]}}z^{[1]}\xrightarrow[BN]{\beta^{[1]},\gamma^{[1]}}\tilde z^{[1]}\to g^{[1]}(\tilde z^{[1]})=a^{[1]}\xrightarrow{w^{[2]},b^{[2]}}z^{[2]}\to \dots$$
+$$X^{\{2\}}\xrightarrow{w^{[1]},b^{[1]}}z^{[1]}\xrightarrow[BN]{\beta^{[1]},\gamma^{[1]}}\tilde z^{[1]}\to g^{[1]}(\tilde z^{[1]})=a^{[1]}\xrightarrow{w^{[2]},b^{[2]}}z^{[2]}\to \dots$$
+$$\vdots$$
+
+其实，当你使用batch的时候，$b$参数可以去掉，以为无论你的$b$是多少，最后都会被归一化然后在重新通过$\beta,\gamma$来去归一化。
+
+所以有：
+$$z^{[l]}=w^{[l]}a^{l-1}$$
+
+$\beta^{[l]}$和$\gamma^{[l]}$的维度都是$(n^{[l]},1)$
+
+步骤：
+\begin{enumerate}
+    \item 正向遍历每一个mini-batch
+    \item 在遍历过程中使用batch归一化替代$z^{[l]}$为$\tilde z^{[l]}$
+    \item 反向计算所有的$dw^{[l]},db^{[l]},d\beta^{[l]},d\gamma^{[l]}$
+    \item 更新参数
+\end{enumerate}
+\subsection{Batch归一化原理}
+通过Batch归一化可以加速学习，
+
+可以使权重比网络更滞后或者更深层，
+
+covariate shift
+
+降低了隐藏单元变化的数量
+
+batch归一化可以使$z^{[i]}$的均值和方差均保持不变，通过这样限制了前面的层会影响数值分布的程度，使得这些值更加的稳定
+
+同时，batch归一化还有轻微的正则化的效果，因为它在每个隐藏层的激活值上增加了噪音
+\section{测试时的mini-batch}
+$$\mu = \frac1m\sum_iz^{(i)}$$
+$$\sigma^2=\frac1m\sum_i(z^{(i)}-\mu)^2$$
+$$z_{norm}^{(i)}=\frac{z^{(i)}-\mu}{\sqrt{\sigma^2+\epsilon}}$$
+$$\tilde z^{(i)}=\gamma z^{(i)} + \beta$$
+
+在mini-batch中，对于每一个mini-batch 有：
+$$x^{\{1\}},x^{\{2\}},x^{\{3\}},\dots$$
+$$\mu^{\{1\}[l]},\mu^{\{2\}[l]},\mu^{\{3\}[l]},\dots$$
+此时我们使用加权平均值来计算，同时也可以在$\sigma$上使用
+
+这样$\mu$和$\sigma$就相当于是在整个样本上计算的了
+
+\section{Softmax回归}
+可以识别多种类型的东西，在深度网络的最后一层，不再是单节点了
+
+$$z^{[L]}=w^{[L]}a^{[L-1]}+b^{[L]}$$
+$$t = e^{z^{[L]}}$$
+$$a^{[L]}=\frac{e^{z^{[L]}}}{\sum_{i=1}^{n^{[L]}}t_i}$$
+$$a^{[L]}_i=\frac{t_i}{\sum t_j}$$
+$n^{[L]}$是最后一层的节点数量
+$a^{[L]}$的每一个元素代表的是这一个类的概率
+
+我们把从$z^{[L]}$到$a^{[L]}$的函数称为 Softmax激活函数
+\subsection{Softmax训练器}
+hard max:计算$z^{[L]}$的最大值
+
+soft max:计算$a^{[L]}$的最大值
+
+cost函数：
+$$l(\hat y,y)=-\sum_{j=1}^{n^{[L]}}y_j\log\hat y_j$$
+
+$$J(w^{[1]},b^{[1]},\dots)=\frac1m\sum_{i=1}^ml(\hat y^{(i)},y^{(i)})$$
+
+这个过程和似然估计法类似
+
+\subsection{Softmax反向传播}
+$$dz^{[L]}=\hat y-y$$
+\section{框架}
+
+\begin{enumerate}
+    \item Caffe/Caffe2
+    \item CNTK
+    \item DL4j
+    \item Keras
+    \item Lasagne
+    \item mxnet
+    \item PaddlePaddle
+    \item TensorFlow
+    \item Theano
+    \item Torch
+\end{enumerate}
+
+\section{TensorFlow}
+一个框架
+
+如果成本函数为：
+$$J=w^2-10w+25$$
+
+\begin{lstlisting}[language = python]
+    import numpy as np
+    import tensorflow as tf
+    w = tf.Variable(0,drype=tf.float32)#定义参数,并初始化
+    cost = tf.add(tf.add(w**2,tf.multiply(-10.,w)),,25)#设置成本函数
+    #cost = w**2-10*w+25#也可以
+    train=tf.train.GradientDescentOptimizer(0.01).minimize(cost)#设置学习率，使用梯度下降法
+
+    init = tf.global_variables_initializer()
+    session = tf.Session()
+    session.run(init)
+    print(session.run(w))#输出w
+    session.run(train)#做一步梯度下降法
+    print(session.run(w))#输出w
+    for i in range(1000):
+        session.run(train)
+    print(session.run(w))
+\end{lstlisting}
+
+训练集：
+\begin{lstlisting}[language = python]
+    x = tf.placeholder(tf.float32,[3,1])#表示后面会给x提供值
+    coefficient = np.array([[1.],[-10.],[25.]])
+    session.run(train,feed_dict={x:coefficients})
+\end{lstlisting}
+\end{document}
