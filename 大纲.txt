@@ -1,0 +1,232 @@
+***排序算法***
+桶排序算法：时间复杂度较小，但占用内存较大。
+冒泡排序：比较两个相邻元素，如果顺序错误就交换过来。双重嵌套循环是的时间复杂度高。
+快速排序算法：每次排序的时候设置一个基准点，将小于等于基准点的数全部放到基准点的左边，将大于基准点的数全部放到基准点的右边。不断地递归调用。相比冒泡排序算法时间复杂度明显降低。
+插入排序算法：在添加新的数时，使用顺序查找的方式找到其要插入的位置，然后将新数字插入。时间复杂度也是（n^2)。
+数据结构（栈，队列，链表）
+队列是一种特殊的线性结构，它只允许在队列的首部（head）金星删除操作，称为出队；而在队列的尾部（tail）进行插入操作，称为入队。当head == tail时，队列为空。遵循FIFO，先进先出原则。
+链表：在存储一大波数据的时候，数组显得不够灵活。链表有无头链表和有头链表。有头链表头节点不存放数据区分开。
+   
+    //创建表头，表示整个链表
+    struct Node* createListHead()
+    {
+        //链表的基本单元就是结构体变量
+        //结构体指针怎么表示结构体变量
+        //1，赋值结构体变量的地址
+        //2，动态内存申请
+        struct Node* ListHead = (struct Node*)malloc(sizeof(struct Node));
+        //为结构体变量初始化
+        //差异化处理，表头不使用数据
+        ListHead->next = NULL;
+        return ListHead;
+    }
+无头链表：
+
+    struct List
+    {
+         struct Node* frontNode;             //头节点
+         struct Node* tailNode;              //尾节点
+         int size;                           //链表的长度
+    };
+    //创建链表
+    struct List* createList()
+    {
+        struct List* list = (struct List*)malloc(sizeof(struct List));
+        list->frontNode = list->tailNode = NULL;
+        list->size = 0;
+        return list;
+    }
+有头链表以头节点来表示整个链表，使用广，而且方便。
+这里涉及到结点的插入和删除（头节点插入/删除，尾节点插入/删除和指定位置插入/删除）
+栈是一种后进先出的数据结构。最近接触栈都跟链表有关
+
+    //链式
+    struct Node
+    {
+        int data;
+        struct Node* next;
+    };
+    //入栈：创建节点的过程
+    struct Node* createNode(int data)
+    {
+        struct Node* newNode = (struct Node*)malloc(sizeof(struct Node*));
+        newNode->data = data;
+        newNode->next = NULL;
+        return newNode;
+    }
+    //栈
+    struct stack
+    {
+        int stacksize;                  //万金油
+        struct stack* stackTop;         //头节点，用栈顶表示
+     //无表头链表
+    };
+    //创建栈：描述这种结构的最初状态
+    struct stack* createStack()
+    {
+        struct stack* myStack = (struct stack*)malloc(sizeof(struct stack));
+        myStack->stacksize = 0;
+        myStack->stackTop = NULL;
+        return myStack;
+    }
+    //万金油函数
+    //获取栈大小，元素
+    int size(struct stack* myStack)
+    {
+        return myStack->stacksize;
+    }
+    //判断栈是否为空
+    int empty(struct stack* myStack)
+    {
+        //返回1，表示为NULL
+        //返回0，表示不为NULL
+        return myStack->stacksize == 0;
+    }
+    //出栈:无表头链表表头法删除
+    void pop(struct stack* myStack)
+    {
+        if (empty(myStack) == 1)
+        {
+           printf("栈为空！\n");
+           return 0;
+        }
+     //找到老二
+     struct Node* nextNode = myStack->stackTop->next;
+     //删除
+     free(myStack->stackTop);
+     myStack->stacksize = nextNode;
+     myStack->stacksize--;
+    }
+    //获取栈顶元素
+    void top(struct stack* myStack)
+    {
+     if (empty(myStack) == 1)
+     {
+      printf("无法获取！\n");
+      return 0;
+     }
+     return myStack->stackTop->data;
+    }
+***DFS与BFS***
+DFS：深度优先搜索用栈（stack）来实现，整个过程可以想象成一个倒立的树形：
+1、把根节点压入栈中。
+2、每次从栈中弹出一个元素，搜索所有在它下一级的元素，把这些元素压入栈中。并把这个元素记为它下一级元素的前驱。
+3、找到所要找的元素时结束程序。
+4、如果遍历整个树还没有找到，结束程序。
+
+     //还可以利用深度优先搜索枚举出任意位自然数的全排列
+     #include <stdio.h>
+     int a[10],book[10],n;
+    
+     void dfs(int step)
+     {
+         int i;
+         if(step == n+1)
+         {
+             for(i = 1;i <= n;i++)
+                 printf("%d\n",a[i];);
+             printf("\n");
+             return ;
+         }
+         for(i = 1;i <= n;i++)
+         {
+             if(book[i] == 0)
+             {
+                 a[step] = i;
+                 book[i] = 1;
+                 dfs(step+1);
+                 book[i] =  0;
+             }
+         }
+         return ;
+     }
+     int main()
+     {
+         scanf("%d",%n);
+         dfs(1);
+         getchar(); getchar();
+         return 0;
+     }
+BFS：广度优先搜索使用队列（queue）来实现，整个过程也可以看做一个倒立的树形：
+1、把根节点放到队列的末尾。
+2、每次从队列的头部取出一个元素，查看这个元素所有的下一级元素，把它们放到队列的末尾。并把这个元素记为它下一级元素的前驱。
+3、找到所要找的元素时结束程序。
+4、如果遍历整个树还没有找到，结束程序。
+***最短路径算法***
+Floyd算法虽然总体时间复杂度较高，但是可以解决负边权，编码复杂度较小；Dijkstra算法扩展后可以适应很多问题，弊端就是无法解决负边权的问题；Bellman-Ford算法或者队列优化的Bellman-Ford算法可以很好地解决负边权的问题。
+***图的遍历***（可用二维矩阵或邻接表法存储图）
+图的深度优先遍历和广度优先遍历......
+***树***
+二叉树：一种特殊的树，最多有两个儿子。
+
+    #include <stdio.h>
+    #include <stdlib.h>
+    struct treeNode
+    {
+     char data;
+     struct treeNode* LChild;
+     struct treeNode* RChild;
+    };
+    //创建树
+    struct treeNode* createNode(char data)
+    {
+     struct treeNode* newNode = (struct treeNode*)malloc(sizeof(struct treeNode))
+     newNode->data = data;
+     newNode->LChild == NULL;
+     newNode->RChild == NULL;
+     return newNode;
+    }
+    //连接节点
+    void insertNode(struct treeNode* curNode, struct treeNode* LChildNode, struct treeNode*     RChildNode)
+    {
+     curNode->LChild = LChildNode;
+     curNode->RChild = RChildNode;
+    }
+    //打印函数
+    void midOrder(struct treeNode* curNode)
+    {
+     printf("%c\t", curNode->data);
+    }
+    //中序遍历
+    void midOrder(struct treeNode* tree)
+    {
+     if (tree != NULL)
+     {
+      midOrder(tree->LChild);
+      printData(tree);
+      midOrder(tree->RChild);
+     }
+    }
+    int main()
+    {
+    //创建所有节点
+    struct treeNode* A = createNode('A');
+    struct treeNode* B = createNode('B');
+    struct treeNode* C = createNode('C');
+    struct treeNode* D = createNode('D');
+    struct treeNode* E = createNode('E');
+    struct treeNode* F = createNode('F');
+    struct treeNode* G = createNode('G');
+    struct treeNode* K = createNode('K');
+
+    //做连接操作
+     InsertNode(A, B, C);
+     insertNode(B, D, E);
+     insertNode(C, F, G);
+     insertNode(F NULL, K);
+     //遍历
+     system("pause");
+     return 0;
+    }
+
+
+Kruskal最小生成树算法：
+首先按照边的权值进行从小到大排序，每次从剩余边中选择权值较小且两个顶点不在同一个集合内的边（不会产生回路的边）加入到生成树中。直到加入了n-1条边为止。当然也涉及到并查集。
+
+Prim最小生成树算法：
+1.将1号顶点加入生成树中，并用一维数组book来标记哪些点已经加入了生成树。
+2.用一维数组dis记录生成树但各个顶点的距离。
+3.从数组dis中选出离生成树最近的顶点（假如为j）加入到生成树中。再以j为中间点，更新生成树到每一个顶点的距离（即就是松弛），如果dis[k] > e[j][k],那么更新dis[k] = e[j][k]。
+4.重复第三步，直到所有顶点加入生成树为止。
+
+
